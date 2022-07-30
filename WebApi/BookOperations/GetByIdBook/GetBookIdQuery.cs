@@ -16,7 +16,7 @@ public class GetBookIdQuery
     {
         var            book = _context.Books!.Where(book => book.Id == id).SingleOrDefault();
         BooksViewModel vm   = new BooksViewModel();
-        vm.Id          = book.Id;
+        vm.Id          = book!.Id;
         vm.Title       = book.Title;
         vm.Genre       = ((GenreEnum)book.GenreId).ToString();
         vm.PublishDate = book.PublishDate.ToString("MM/dd/yyyy");
@@ -26,10 +26,12 @@ public class GetBookIdQuery
 
     public class BooksViewModel
     {
-        public int    Id          { get; set; }
-        public string Title       { get; set; }
-        public int    PageCount   { get; set; }
-        public String PublishDate { get; set; }
-        public string Genre       { get; set; }
+        public int     Id        { get; set; }
+        public string? Title     { get; set; }
+        public int     PageCount { get; set; }
+
+        public String? PublishDate { get; set; }
+
+        public string? Genre { get; set; }
     }
 }

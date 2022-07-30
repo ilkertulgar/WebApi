@@ -11,6 +11,8 @@ public class DeleteBookId
     {
         _context = dbContext;
     }
+
+
     public int Handle(int id)
     {
         var book = _context.Books!.SingleOrDefault(x => x.Id == id);
@@ -18,6 +20,7 @@ public class DeleteBookId
         {
             return 0;
         }
+
         _context.Books!.Remove(book);
         _context.SaveChanges();
         return 1;

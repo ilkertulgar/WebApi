@@ -3,6 +3,7 @@ using WebApi.BookOperations.CreateBook;
 using WebApi.BookOperations.DeleteBookId;
 using WebApi.BookOperations.GetBooks;
 using WebApi.BookOperations.GetByIdBook;
+using WebApi.BookOperations.UpdateBook;
 using WebApi.DBOperations;
 
 namespace WebApi.Controllers;
@@ -58,18 +59,14 @@ public class BookController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateBook(int id, [FromBody]Book updateBook)
     {
-        var book = _context.Books!.SingleOrDefault(x => x.Id == id);
-        if (book is null)
-        {
-            return BadRequest();
-        }
+        UpdateBookId bookId = new UpdateBookId(_context);
+       var result =  bookId.Handle(id, updateBook);
 
-        book.GenreId     = updateBook.GenreId != default ? updateBook.GenreId : book.GenreId;
-        book.PageCount   = updateBook.PageCount != default ? updateBook.PageCount : book.PageCount;
-        book.PublishDate = updateBook.PublishDate != default ? updateBook.PublishDate : book.PublishDate;
-        book.Title       = updateBook.Title != default ? updateBook.Title : book.Title;
-        _context.SaveChanges();
-        return Ok();
+       if (result==0)
+       {
+           return BadRequest("Güncelleme Yapılamamıştır.");
+       }
+        return Ok("Güncelleme İşlemi Başarılı.");
     }
 
     [HttpDelete("{id}")]

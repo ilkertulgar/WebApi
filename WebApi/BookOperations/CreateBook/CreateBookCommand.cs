@@ -5,7 +5,7 @@ namespace WebApi.BookOperations.CreateBook;
 
 public class CreateBookCommand
 {
-    public           CreateBookModel    Model { get; set; }
+    public           CreateBookModel    Model { get; set; } = null!;
     private readonly BookStoreDbContext _context;
     public CreateBookCommand(BookStoreDbContext dbContext)
     {
@@ -34,7 +34,7 @@ public class CreateBookCommand
     }
     public class CreateBookModel 
     {
-        public String Title{ get; set; }
+        public string? Title { get; set; }
         
         public int GenraId { get; set; }
         

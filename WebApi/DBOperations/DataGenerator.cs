@@ -9,12 +9,12 @@ public static class DataGenerator
     {
         var context = new BookStoreDbContext(serviceProvider.GetRequiredService<DbContextOptions<BookStoreDbContext>>());
 
-        if (context.Books.Any())
+        if (context.Books!.Any())
         {
             return;
         }
 
-        context.Books.AddRange(new Book()
+        context.Books!.AddRange(new Book()
                                 {
                                   //  Id          = 1,
                                     Title       = "Learn Starup",
