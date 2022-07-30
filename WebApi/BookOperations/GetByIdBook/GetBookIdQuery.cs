@@ -14,18 +14,13 @@ public class GetBookIdQuery
 
     public BooksViewModel Handle(int id)
     {
-        var book = _context.Books!.Where(book => book.Id == id).SingleOrDefault();
-
-        BooksViewModel vm = new BooksViewModel();
-
-
+        var            book = _context.Books!.Where(book => book.Id == id).SingleOrDefault();
+        BooksViewModel vm   = new BooksViewModel();
         vm.Id          = book.Id;
         vm.Title       = book.Title;
         vm.Genre       = ((GenreEnum)book.GenreId).ToString();
         vm.PublishDate = book.PublishDate.ToString("MM/dd/yyyy");
         vm.PageCount   = book.PageCount;
-
-
         return vm;
     }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.BookOperations.CreateBook;
+using WebApi.BookOperations.DeleteBookId;
 using WebApi.BookOperations.GetBooks;
 using WebApi.BookOperations.GetByIdBook;
 using WebApi.DBOperations;
@@ -33,6 +34,8 @@ public class BookController : ControllerBase
         var            result = query.Handle(id);
         return Ok(result);
     }
+
+
     [HttpPost]
     public IActionResult AddBook([FromBody]CreateBookCommand.CreateBookModel newBook)
     {
@@ -50,6 +53,7 @@ public class BookController : ControllerBase
 
         return Ok();
     }
+
 
     [HttpPut("{id}")]
     public IActionResult UpdateBook(int id, [FromBody]Book updateBook)
@@ -71,14 +75,15 @@ public class BookController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteBook(int id)
     {
-        var book = _context.Books!.SingleOrDefault(x => x.Id == id);
-        if (book is null)
+        DeleteBookId bookId = new DeleteBookId(_context);
+
+        var result = bookId.Handle(id);
+
+        if (result == 0)
         {
-            return BadRequest();
+            return BadRequest("Kayıtlı Kitap Bulunamadı");
         }
 
-        _context.Books!.Remove(book);
-        _context.SaveChanges();
-        return Ok();
+        return Ok("Kitap Silinmiştir.");
     }
 }
