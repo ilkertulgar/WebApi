@@ -1,4 +1,6 @@
-﻿using WebApi.Common;
+﻿using System.Security.AccessControl;
+using AutoMapper;
+using WebApi.Common;
 using WebApi.DBOperations;
 
 namespace WebApi.BookOperations.GetByIdBook;
@@ -6,16 +8,18 @@ namespace WebApi.BookOperations.GetByIdBook;
 public class GetBookIdQuery
 {
     private readonly BookStoreDbContext _context;
+    //private readonly IMapper            _mapper;
 
     public GetBookIdQuery(BookStoreDbContext dbContext)
     {
         _context = dbContext;
+       // _mapper  = mapper;
     }
 
     public BooksViewModel Handle(int id)
     {
-        var            book = _context.Books!.Where(book => book.Id == id).SingleOrDefault();
-        BooksViewModel vm   = new BooksViewModel();
+        var            book = _context.Books!.SingleOrDefault(book => book.Id == id);
+        BooksViewModel vm   = new BooksViewModel(); //_mapper.Map<BooksViewModel>(book);
         vm.Id          = book!.Id;
         vm.Title       = book.Title;
         vm.Genre       = ((GenreEnum)book.GenreId).ToString();

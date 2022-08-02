@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.BookOperations.CreateBook;
 using WebApi.BookOperations.DeleteBookId;
 using WebApi.BookOperations.GetBooks;
 using WebApi.BookOperations.GetByIdBook;
 using WebApi.BookOperations.UpdateBook;
 using WebApi.DBOperations;
+using WebApi.Mapping;
 
 namespace WebApi.Controllers;
 
@@ -12,12 +14,14 @@ namespace WebApi.Controllers;
 [Route("[controller]s")]
 public class BookController : ControllerBase
 {
-    public BookController(BookStoreDbContext context)
+    public BookController(BookStoreDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper  = mapper;
     }
 
     private readonly BookStoreDbContext _context;
+    private readonly IMapper            _mapper;
 
 
     [HttpGet]
@@ -40,7 +44,7 @@ public class BookController : ControllerBase
     [HttpPost]
     public IActionResult AddBook([FromBody]CreateBookCommand.CreateBookModel newBook)
     {
-        CreateBookCommand command = new CreateBookCommand(_context);
+        CreateBookCommand command = new CreateBookCommand(_context, _mapper);
 
         try
         {
@@ -60,12 +64,13 @@ public class BookController : ControllerBase
     public IActionResult UpdateBook(int id, [FromBody]Book updateBook)
     {
         UpdateBookId bookId = new UpdateBookId(_context);
-       var result =  bookId.Handle(id, updateBook);
+        var          result = bookId.Handle(id, updateBook);
 
-       if (result==0)
-       {
-           return BadRequest("Güncelleme Yapılamamıştır.");
-       }
+        if (result == 0)
+        {
+            return BadRequest("Güncelleme Yapılamamıştır.");
+        }
+
         return Ok("Güncelleme İşlemi Başarılı.");
     }
 
