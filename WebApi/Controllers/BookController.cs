@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.BookOperations.CreateBook;
 using WebApi.BookOperations.DeleteBookId;
@@ -45,18 +47,36 @@ public class BookController : ControllerBase
     public IActionResult AddBook([FromBody]CreateBookCommand.CreateBookModel newBook)
     {
         CreateBookCommand command = new CreateBookCommand(_context, _mapper);
-
+        string            exp;
         try
         {
             command.Model = newBook;
-            command.Handle();
+            CreateBookCommandValidator validator = new CreateBookCommandValidator();
+            ValidationResult           result    = validator.Validate(command);
+            validator.ValidateAndThrow(command);
+            // if (!result.IsValid)
+            //
+            // {
+            //    
+            //     foreach (var item in result.Errors)
+            //     {
+            //         Console.WriteLine(item.PropertyName +" için  hata : "+item.ErrorMessage);
+            //
+            //          exp = item.PropertyName + " için  hata : " + item.ErrorMessage;
+            //     }
+            //
+            // }
+            // else
+            // {
+            //     command.Handle();
+            // }
         }
         catch (Exception e)
         {
-            return BadRequest(e);
+            return BadRequest(e.Message);
         }
-
-        return Ok();
+        command.Handle();
+        return Ok("Kayıt İşlemi Başarılı");
     }
 
 

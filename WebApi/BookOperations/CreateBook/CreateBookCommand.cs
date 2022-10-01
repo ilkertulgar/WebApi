@@ -39,10 +39,11 @@ public class CreateBookCommand
     {
         public string? Title { get; set; }
         
-        public int GenraId { get; set; }
+        public int GenreId { get; set; }
         
         public int PageCount { get; set; }
         
-        public DateTime PublisDate { get; set; }
+        public DateTime PublishDate { get; set; }
+     
     }
 }
